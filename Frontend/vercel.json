@@ -1,6 +1,8 @@
 {
   "rewrites": [
-    { "source": "/(register|login|logout|user|song|songs)", "destination": "/$1" },
+    { "source": "/auth/(.*)", "destination": "/auth/$1" },
+    { "source": "/song", "destination": "/song" },
+    { "source": "/songs", "destination": "/songs" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
