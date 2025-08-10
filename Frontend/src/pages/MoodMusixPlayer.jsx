@@ -48,7 +48,7 @@ const MoodMusicPlayer = () => {
       setModelsLoaded(true);
     } catch (error) {
       console.error("Error loading models:", error);
-  toast.error("Failed to load AI models. Please refresh the page.");
+     toast.error("Failed to load AI models. Please refresh the page.");
     }
   };
 
@@ -70,7 +70,7 @@ const MoodMusicPlayer = () => {
       }
     } catch (err) {
       console.error("Error accessing camera:", err);
-  toast.error("Unable to access camera. Please check permissions.");
+      toast.error("Unable to access camera. Please check permissions.");
     }
   };
 
@@ -135,7 +135,6 @@ const MoodMusicPlayer = () => {
 
   const togglePlayPause = (song) => {
     if (currentSong?._id === song._id) {
-      console.log("Pausing song:", song);
 
       if (isPlaying) {
         audioRef.current.pause();
@@ -145,8 +144,6 @@ const MoodMusicPlayer = () => {
         setIsPlaying(true);
       }
     } else {
-      console.log(currentSong);
-
       setCurrentSong(song);
       setIsPlaying(true);
     }
