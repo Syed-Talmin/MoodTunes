@@ -16,6 +16,22 @@ import {
 } from "lucide-react";
 
 const MoodMusicPlayer = () => {
+  // Responsive threshold for marquee
+  const getTitleThreshold = () => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth < 768 ? 15 : 25;
+    }
+    return 25; // fallback for SSR
+  };
+  const [titleThreshold, setTitleThreshold] = useState(getTitleThreshold());
+
+  useEffect(() => {
+    const handleResize = () => {
+      setTitleThreshold(getTitleThreshold());
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentSong, setCurrentSong] = useState(null);
   const [userMood, setUserMood] = useState(null);
@@ -23,6 +39,7 @@ const MoodMusicPlayer = () => {
   const [isDetecting, setIsDetecting] = useState(false);
   const [modelsLoaded, setModelsLoaded] = useState(false);
   const [songsByMood, setSongsByMood] = useState([]);
+  const [isSongsLoading, setIsSongsLoading] = useState(false);
   const [audioTime, setAudioTime] = useState({ current: 0, duration: 0 });
   const audioRef = useRef(null);
   const videoRef = useRef(null);
@@ -156,11 +173,14 @@ const MoodMusicPlayer = () => {
   }, [currentSong]);
 
   const fetchSongsByMood = async () => {
+    setIsSongsLoading(true);
     try {
       const response = await axios.get(`/songs?mood=${userMood}`);
       setSongsByMood(response.data);
     } catch (error) {
       console.error("Error fetching songs:", error);
+    } finally {
+      setIsSongsLoading(false);
     }
   };
 
@@ -313,7 +333,12 @@ const MoodMusicPlayer = () => {
           </div>
 
           <div className="grid gap-4">
-            {songsByMood.length > 0 ? (
+            {isSongsLoading ? (
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-purple-400 mx-auto mb-4"></div>
+                <p className="text-gray-400 text-lg">Loading songs...</p>
+              </div>
+            ) : songsByMood.length > 0 ? (
               songsByMood.map((song, index) => (
                 <div
                   key={index}
@@ -328,9 +353,17 @@ const MoodMusicPlayer = () => {
 
                     {/* Song Info */}
                     <div className="flex-grow min-w-0">
-                      <h3 className="font-bold text-lg md:text-xl truncate">
-                        {song.title}
-                      </h3>
+                      {song.title.length > titleThreshold ? (
+                        <div className="overflow-x-auto whitespace-nowrap" style={{maxWidth: '100%'}}>
+                          <marquee behavior="scroll" direction="left" scrollamount="4">
+                            <span className="font-bold text-lg md:text-xl">{song.title}</span>
+                          </marquee>
+                        </div>
+                      ) : (
+                        <h3 className="font-bold text-lg md:text-xl truncate">
+                          {song.title}
+                        </h3>
+                      )}
                       <p className="text-gray-300 truncate">{song.artist}</p>
                     </div>
 
