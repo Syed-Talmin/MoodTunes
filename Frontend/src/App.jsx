@@ -61,18 +61,7 @@ const App = () => {
           </button>
         </div>
       )}
-      {loading ? (
-        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f3f4f6' }}>
-          <div style={{ textAlign: 'center' }}>
-            <div className="loader" style={{ marginBottom: '16px' }}>
-              <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="24" cy="24" r="20" stroke="#6366f1" strokeWidth="4" strokeDasharray="100" strokeDashoffset="60"/>
-              </svg>
-            </div>
-            <div style={{ color: '#6366f1', fontWeight: 'bold', fontSize: '1.2rem' }}>Loading user...</div>
-          </div>
-        </div>
-      ) : (
+    
         <Routes>
           <Route path="/" element={<Home />} />
           <Route
@@ -90,7 +79,6 @@ const App = () => {
             }
           />
         </Routes>
-      )}
     </>
   );
 };
