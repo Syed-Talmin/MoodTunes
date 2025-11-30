@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors(   
     {
-        origin: 'https://mood-tunes-nu.vercel.app',
+        origin: 'https://mood-tunes-rose.vercel.app/',
         credentials: true
     }
 ));
